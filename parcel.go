@@ -21,7 +21,10 @@ func (s ParcelStore) Add(p Parcel) (int, error) {
 	if err != nil {
 		return 0, err
 	}
-	id, _ := req.LastInsertId()
+	id, err := req.LastInsertId()
+	if err != nil {
+		return 0, err
+	}
 	return int(id), nil
 }
 
@@ -49,6 +52,10 @@ func (s ParcelStore) GetByClient(client int) ([]Parcel, error) {
 			return []Parcel{}, err
 		}
 		res = append(res, p)
+	}
+	err = row.Err()
+	if err != nil {
+		return []Parcel{}, err
 	}
 	return res, nil
 }
